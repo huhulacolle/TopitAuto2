@@ -1,8 +1,5 @@
-/**
- * @see https://www.electron.build/configuration/configuration
- */
 {
-  "appId": "YourAppID",
+  "appId": "com.electron.topitautov2",
   "asar": true,
   "directories": {
     "output": "release/${version}"
@@ -20,18 +17,12 @@
   "win": {
     "target": [
       {
-        "target": "nsis",
+        "target": "portable",
         "arch": [
-          "x64"
+          "ia32"
         ]
       }
     ],
     "artifactName": "${productName}_${version}.${ext}"
-  },
-  "nsis": {
-    "oneClick": false,
-    "perMachine": false,
-    "allowToChangeInstallationDirectory": true,
-    "deleteAppDataOnUninstall": false
   }
 }

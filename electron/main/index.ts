@@ -1,4 +1,6 @@
+import Results from 'google-img-scrap/types/results';
 import { app, BrowserWindow, shell, ipcMain } from 'electron'
+import { GOOGLE_IMG_SCRAP, GOOGLE_QUERY } from 'google-img-scrap'
 import { release } from 'node:os'
 import { join } from 'node:path'
 
@@ -42,7 +44,12 @@ const indexHtml = join(process.env.DIST, 'index.html')
 
 async function createWindow() {
   win = new BrowserWindow({
-    title: 'Main window',
+    title: 'Topit\'Auto',
+    width: 800,
+    height: 600,
+    resizable: false,
+    center: true,
+    autoHideMenuBar: true,
     icon: join(process.env.PUBLIC, 'favicon.ico'),
     webPreferences: {
       preload,
@@ -50,7 +57,7 @@ async function createWindow() {
       // Consider using contextBridge.exposeInMainWorld
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
       nodeIntegration: true,
-      contextIsolation: false,
+      contextIsolation: true,
     },
   })
 
@@ -98,19 +105,12 @@ app.on('activate', () => {
   }
 })
 
-// New window example arg: new windows url
-ipcMain.handle('open-win', (_, arg) => {
-  const childWindow = new BrowserWindow({
-    webPreferences: {
-      preload,
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
+ipcMain.handle("googleScrap", async (event, args): Promise<Results> => {
+  return GOOGLE_IMG_SCRAP({
+    search: args,
+    limit: 10,
+    query: {
+      EXTENSION: GOOGLE_QUERY.EXTENSION.JPG
+    }
   })
-
-  if (process.env.VITE_DEV_SERVER_URL) {
-    childWindow.loadURL(`${url}#${arg}`)
-  } else {
-    childWindow.loadFile(indexHtml, { hash: arg })
-  }
 })

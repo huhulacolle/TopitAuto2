@@ -1,36 +1,28 @@
-import nodeLogo from "./assets/node.svg"
-import { useState } from 'react'
-import './App.scss'
+import { createHashRouter, RouterProvider,  } from "react-router-dom";
+import Home from "./components/Home";
+import Root from "./components/Root";
+import Update from "./components/Update";
 
-console.log('[App.tsx]', `Hello world from Electron ${process.versions.electron}!`)
+export default function App() {
 
-function App() {
-  const [count, setCount] = useState(0)
+  const router = createHashRouter([
+    {
+      path: "/",
+      element: <Root />,
+      children: [
+        {
+          index: true,
+          element: <Home />
+        },
+        {
+          path: 'update',
+          element: <Update />
+        }
+      ]
+    },
+  ])
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://github.com/electron-vite/electron-vite-react" target="_blank">
-          <img src="./electron-vite.svg" className="logo" alt="Electron + Vite logo" />
-        </a>
-      </div>
-      <h1>Electron + Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Electron + Vite logo to learn more
-      </p>
-      <div className="flex-center">
-        Place static files into the<code>/public</code> folder <img style={{ width: "5em" }} src={nodeLogo} alt="Node logo" />
-      </div>
-    </div>
+    <RouterProvider router={router} />
   )
 }
-
-export default App
