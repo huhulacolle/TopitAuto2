@@ -1,10 +1,21 @@
-import { contextBridge, ipcRenderer } from "electron";
-import { GOOGLE_IMG_SCRAP, GOOGLE_QUERY } from "google-img-scrap";
+import { contextBridge, IpcRenderer, ipcRenderer } from "electron";
 import Results from "google-img-scrap/types/results";
 
 const system = {
   googleScrap: (search: string): Promise<Results> => {
     return ipcRenderer.invoke("googleScrap", search);
+  },
+  getMusic: (): Promise<string> => {
+    return ipcRenderer.invoke("getMusic");
+  },
+  getMessage: (): any => {
+    return ipcRenderer.listeners("getMessage");
+  },
+  download: (): Promise<string> => {
+    return ipcRenderer.invoke("download");
+  },
+  test: (): Promise<string> => {
+    return ipcRenderer.invoke("test");
   }
 }
 

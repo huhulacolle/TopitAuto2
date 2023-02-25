@@ -1,8 +1,9 @@
-import Results from 'google-img-scrap/types/results';
-import { app, BrowserWindow, shell, ipcMain } from 'electron'
+import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron'
 import { GOOGLE_IMG_SCRAP, GOOGLE_QUERY } from 'google-img-scrap'
-import { release } from 'node:os'
 import { join } from 'node:path'
+import Results from 'google-img-scrap/types/results';
+import ffmpeg from '@ffmpeg-installer/ffmpeg';
+import electronDl from 'electron-dl'
 
 // The built directory structure
 //
@@ -14,14 +15,12 @@ import { join } from 'node:path'
 // ├─┬ dist
 // │ └── index.html    > Electron-Renderer
 //
+
 process.env.DIST_ELECTRON = join(__dirname, '../')
 process.env.DIST = join(process.env.DIST_ELECTRON, '../dist')
 process.env.PUBLIC = process.env.VITE_DEV_SERVER_URL
   ? join(process.env.DIST_ELECTRON, '../public')
   : process.env.DIST
-
-// Disable GPU Acceleration for Windows 7
-if (release().startsWith('6.1')) app.disableHardwareAcceleration()
 
 // Set application name for Windows 10+ notifications
 if (process.platform === 'win32') app.setAppUserModelId(app.getName())
@@ -113,4 +112,35 @@ ipcMain.handle("googleScrap", async (event, args): Promise<Results> => {
       EXTENSION: GOOGLE_QUERY.EXTENSION.JPG
     }
   })
+})
+
+ipcMain.handle("getMusic", async (event, args): Promise<string> => {
+  let music = "";
+  await dialog.showOpenDialog({
+    defaultPath: app.getPath('downloads'),
+    filters: [
+      { name : 'MP3', extensions: ['mp3'] }
+    ]
+  })
+  .then(
+    path => {
+      music = path.filePaths[0];
+    }
+  )
+  return music;
+})
+
+ipcMain.handle("download", async (event, args) => {
+  const win = BrowserWindow.getFocusedWindow();
+  electronDl.download(win, args , {
+    onCompleted(file) {
+      return file.path;
+    }
+  })
+})
+
+
+ipcMain.handle("test", (event, args): string => {  
+  const ffmpegPath = ffmpeg.path.replace('app.asar', 'app.asar.unpacked')
+  return app.getPath("temp");
 })

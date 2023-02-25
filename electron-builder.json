@@ -17,9 +17,9 @@
   "win": {
     "target": [
       {
-        "target": "portable",
+        "target": "zip",
         "arch": [
-          "ia32"
+          "x64"
         ]
       }
     ],
