@@ -1,7 +1,6 @@
 import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron'
 import { GOOGLE_IMG_SCRAP, GOOGLE_QUERY } from 'google-img-scrap'
 import { join } from 'node:path'
-import Results from 'google-img-scrap/types/results';
 import ffmpeg from '@ffmpeg-installer/ffmpeg';
 import electronDl from 'electron-dl'
 
@@ -104,7 +103,7 @@ app.on('activate', () => {
   }
 })
 
-ipcMain.handle("googleScrap", async (event, args): Promise<Results> => {
+ipcMain.handle("googleScrap", async (event, args): Promise<any> => {
   return GOOGLE_IMG_SCRAP({
     search: args,
     limit: 10,

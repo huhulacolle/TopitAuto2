@@ -15,7 +15,7 @@ export default function Home() {
   async function googleScrap(data: Submit) {
     setMessage("Téléchargement des images");
     const listImg = await window.api.system.googleScrap(data.top);
-    
+    console.log(listImg);
   }
 
   async function getMusic() {
